@@ -14,10 +14,7 @@ import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -39,6 +36,23 @@ public class EsController {
 
         return "success";
     }
+
+    //列表
+    @GetMapping("/list")
+    public CommonResult list() {
+        CommonResult result = new CommonResult();
+        try{
+            List<Employee> list_all = employeeService.findAll();
+            result.setData(list_all);
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.setState(500);
+            result.setMsg("获取列表失败");
+            return result;
+        }
+    }
+
     //查询
     @RequestMapping(value = "/query/", method = RequestMethod.GET)
     public List<Employee> query(@RequestParam("param")String param){
@@ -79,17 +93,18 @@ public class EsController {
         }
     }
 
-    //局部更新
-    @RequestMapping("/update")
-    public String update(){
-
-        Employee employee=er.queryEmployeeById("1");
-//        employee.setFirstName("哈哈");
-        er.save(employee);
-
-        System.err.println("update a obj");
-
-        return "success";
+    //更新
+    @PutMapping("/update/")
+    public CommonResult update(Employee employee){
+        CommonResult result = new CommonResult();
+        try {
+            employeeService.saveEmployee(employee);
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.setState(500);
+            result.setMsg("更新失败");
+            return result;
+        }
     }
-
 }
