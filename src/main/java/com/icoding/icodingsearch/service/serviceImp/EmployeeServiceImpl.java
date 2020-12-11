@@ -15,8 +15,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     private EmployeeRepository employeeRepository;
 
     @Override
-    public List<Employee> findAll() {
-        return (List<Employee>) employeeRepository.findAll();
+    public Iterable<Employee> findAll() {
+        return employeeRepository.findAll();
     }
 
     @Override

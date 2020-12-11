@@ -6,7 +6,7 @@ import java.util.List;
 
 
 public interface EmployeeService {
-    List<Employee> findAll();
+    Iterable<Employee> findAll();
 
     void saveEmployee(Employee employee);
 
