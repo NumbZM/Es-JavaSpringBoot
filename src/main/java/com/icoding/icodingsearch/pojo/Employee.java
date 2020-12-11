@@ -11,7 +11,7 @@ import java.util.Objects;
  * @Description:Book实体 加上了@Document注解之后，默认情况下这个实体中所有的属性都会被建立索引、并且分词
  */
 @Data
-@Document(indexName = "megacorp",type = "employee", shards = 5,replicas = 1, refreshInterval = "-1")
+@Document(indexName = "megacorp1",type = "employee", shards = 5)
 public class Employee {
     @Id
     private String id;
