@@ -95,11 +95,12 @@ public class EsController {
     }
 
     //删除
-    @PostMapping ("/delete/")
+    @GetMapping ("/delete/")
     public CommonResult delete(String id){
         CommonResult result = new CommonResult();
         try {
             employeeService.deleteEmployeeById(id);
+            result.setMsg("删除成功！");
             return result;
         } catch (Exception e) {
             e.printStackTrace();
