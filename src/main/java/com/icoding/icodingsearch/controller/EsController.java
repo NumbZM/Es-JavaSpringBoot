@@ -28,21 +28,37 @@ public class EsController {
     //增加
     @RequestMapping(value = "/add/",method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public String add(@RequestBody Employee employee){
-//        System.out.println(data.num);
-
-//        Employee employee=new Employee(param);
-//        employee.setId(id);
-//        employee.setNum("Y.S.K");
-//        employee.setXm("~");
-//        employee.setPhone("123");
-//        employee.setEmail("");
         er.save(employee);
-//
         System.err.println(employee);
         System.err.println("add a obj");
 
         return "success";
     }
+    //查询
+    @RequestMapping(value = "/query/", method = RequestMethod.GET)
+    public List<Employee> query(@RequestParam("param")String param){
+        if(param == null || "".equals(param)){
+            return null;
+        }
+        List<Employee> result = new ArrayList<>();
+        Class clazz = Employee.class;
+        Field[] fields = clazz.getDeclaredFields();
+        for (Field field : fields) {
+            String fieldName = field.getName();
+            if ("photo".equals(fieldName)) {
+                continue;
+            }
+            QueryBuilder queryBuilder = QueryBuilders.wildcardQuery(fieldName, "*" + param + "*");
+            QueryBuilder builder = QueryBuilders.matchPhraseQuery(fieldName, param);
+            Iterable<Employee> employees = er.search(queryBuilder);
+            Iterable<Employee> emps = er.search(builder);
+            employees.forEach(result::add);
+            emps.forEach(result::add);
+        }
+
+        return result.stream().distinct().collect(Collectors.toList());
+    }
+
 
     //删除
     @RequestMapping("/delete")
@@ -65,34 +81,6 @@ public class EsController {
         System.err.println("update a obj");
 
         return "success";
-    }
-
-    //查询
-    @RequestMapping(value = "/query/", method = RequestMethod.GET)
-    public List<Employee> query(@RequestParam("param")String param){
-        if(param == null || "".equals(param)){
-            return null;
-        }
-        List<Employee> result = new ArrayList<>();
-        Class clazz = Employee.class;
-        Field[] fields = clazz.getDeclaredFields();
-        for (Field field : fields) {
-            String fieldName = field.getName();
-            if("photo".equals(fieldName)){
-                continue;
-            }
-            QueryBuilder queryBuilder = QueryBuilders.wildcardQuery(fieldName, "*" + param + "*");
-            Iterable<Employee> employees = er.search(queryBuilder);
-            if(employees != null){
-                employees.forEach(v->{
-                    Optional<Employee> any = result.stream().filter(info -> info.getId().equals(v.getId())).findAny();
-                    if(!any.isPresent()){
-                        result.add(v);
-                    }
-                });
-            }
-        }
-        return result;
     }
 
 }
