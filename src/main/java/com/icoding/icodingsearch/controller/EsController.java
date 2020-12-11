@@ -38,7 +38,7 @@ public class EsController {
     }
 
     //列表
-    @GetMapping("/list")
+    @GetMapping("/list/")
     public CommonResult list() {
         CommonResult result = new CommonResult();
         try{
@@ -76,6 +76,22 @@ public class EsController {
         }
 
         return result.stream().distinct().collect(Collectors.toList());
+    }
+
+    //根据id搜索
+    @GetMapping("/get_employee/")
+    public CommonResult getEmployee(String id) {
+        CommonResult result = new CommonResult();
+        try{
+            Employee employee = employeeService.findById(id);
+            result.setData(employee);
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.setState(500);
+            result.setMsg("搜索成功");
+            return result;
+        }
     }
 
     //删除
