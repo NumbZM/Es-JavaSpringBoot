@@ -50,7 +50,7 @@ public class EsController {
     public CommonResult list() {
         CommonResult result = new CommonResult();
         try{
-            List<Employee> list_all = employeeService.findAll();
+            Iterable<Employee> list_all = employeeService.findAll();
             result.setData(list_all);
             return result;
         } catch (Exception e) {
