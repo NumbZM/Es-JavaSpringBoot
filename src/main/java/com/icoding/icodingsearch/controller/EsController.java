@@ -80,7 +80,7 @@ public class EsController {
 
     //删除
     @PostMapping ("/delete/")
-    public CommonResult delete(Integer id){
+    public CommonResult delete(String id){
         CommonResult result = new CommonResult();
         try {
             employeeService.deleteEmployeeById(id);
