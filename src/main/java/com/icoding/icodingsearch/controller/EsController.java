@@ -29,12 +29,20 @@ public class EsController {
 
     //增加
     @RequestMapping(value = "/add/",method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public String add(@RequestBody Employee employee){
-        er.save(employee);
-        System.err.println(employee);
-        System.err.println("add a obj");
-
-        return "success";
+    public CommonResult add(@RequestBody Employee employee){
+        CommonResult result = new CommonResult();
+        try{
+            er.save(employee);
+            System.err.println(employee);
+            System.err.println("add a obj");
+            result.setMsg("新增成功！");
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.setState(500);
+            result.setMsg("新增失败");
+            return result;
+        }
     }
 
     //列表
