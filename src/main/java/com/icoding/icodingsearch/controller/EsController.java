@@ -3,6 +3,8 @@ package com.icoding.icodingsearch.controller;
 import com.google.gson.Gson;
 import com.icoding.icodingsearch.config.EmployeeRepository;
 import com.icoding.icodingsearch.pojo.Employee;
+import com.icoding.icodingsearch.service.EmployeeService;
+import com.icoding.icodingsearch.utill.CommonResult;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,9 @@ public class EsController {
 
     @Autowired
     private EmployeeRepository er;
+
+    @Autowired
+    private EmployeeService employeeService;
 
     //增加
     @RequestMapping(value = "/add/",method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
@@ -59,15 +64,19 @@ public class EsController {
         return result.stream().distinct().collect(Collectors.toList());
     }
 
-
     //删除
-    @RequestMapping("/delete")
-    public String delete(){
-        Employee employee=new Employee();
-//        employee.setId("1");
-        er.delete(employee);
-
-        return "success";
+    @PostMapping ("/delete/")
+    public CommonResult delete(Integer id){
+        CommonResult result = new CommonResult();
+        try {
+            employeeService.deleteEmployeeById(id);
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.setState(500);
+            result.setMsg("删除失败");
+            return result;
+        }
     }
 
     //局部更新
